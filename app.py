@@ -48,33 +48,35 @@ def text_to_speech(text, lg):
         my_file_name = text[0:20]
     except:
         my_file_name = "audio"
-    tts.save(f"temp/{my_file_name}.mp3")
-    return my_file_name, text
+    audio_file_path = f"temp/{my_file_name}.mp3"
+    tts.save(audio_file_path)
+    return audio_file_path, text
 
 # Al presionar el botón para convertir a audio
 if st.button("Convertir a Audio"):
     if not text:
         st.warning("Por favor ingresa un texto.")
     else:
-        result, output_text = text_to_speech(text, lg)  # Cambié 'tld' a 'lg'
+        # Generar el archivo de audio
+        result_path, output_text = text_to_speech(text, lg)  
         
-        # Muestra el reproductor de audio de forma destacada
-        st.markdown("### Escucha tu audio:")
-        audio_file = open(f"temp/{result}.mp3", "rb")
-        audio_bytes = audio_file.read()
-
         # Reproductor de audio
+        st.markdown("### Escucha tu audio:")
+        audio_file = open(result_path, "rb")
+        audio_bytes = audio_file.read()
+        
+        # Mostrar el reproductor de audio
         st.audio(audio_bytes, format="audio/mp3", start_time=0)
 
         # Descargar el archivo de audio
-        with open(f"temp/{result}.mp3", "rb") as f:
+        with open(result_path, "rb") as f:
             data = f.read()
 
         def get_binary_file_downloader_html(bin_file, file_label='File'):
             bin_str = base64.b64encode(data).decode()
             href = f'<a href="data:application/octet-stream;base64,{bin_str}" download="{os.path.basename(bin_file)}">Download {file_label}</a>'
             return href
-        st.markdown(get_binary_file_downloader_html("audio.mp3", file_label="Audio File"), unsafe_allow_html=True)
+        st.markdown(get_binary_file_downloader_html(result_path, file_label="Audio File"), unsafe_allow_html=True)
 
 def remove_files(n):
     mp3_files = glob.glob("temp/*mp3")
@@ -87,4 +89,5 @@ def remove_files(n):
                 print("Deleted ", f)
 
 remove_files(7)
+
 
