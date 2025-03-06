@@ -57,9 +57,13 @@ if st.button("Convertir a Audio"):
         st.warning("Por favor ingresa un texto.")
     else:
         result, output_text = text_to_speech(text, lg)  # Cambié 'tld' a 'lg'
+        
+        # Muestra el reproductor de audio de forma destacada
+        st.markdown("### Escucha tu audio:")
         audio_file = open(f"temp/{result}.mp3", "rb")
         audio_bytes = audio_file.read()
-        st.markdown(f"## Tu audio:")
+
+        # Reproductor de audio
         st.audio(audio_bytes, format="audio/mp3", start_time=0)
 
         # Descargar el archivo de audio
@@ -83,3 +87,4 @@ def remove_files(n):
                 print("Deleted ", f)
 
 remove_files(7)
+
