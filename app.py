@@ -31,6 +31,9 @@ text = st.text_area("Ingrese El texto a escuchar.")
 # Cambiar la selección del idioma a botones
 st.subheader("Selecciona el lenguaje")
 
+# Inicializar el idioma por defecto
+lg = None
+
 # Definir el comportamiento de los botones
 col1, col2 = st.columns(2)
 
@@ -41,6 +44,10 @@ with col1:
 with col2:
     if st.button("English"):
         lg = 'en'
+
+# Si no se selecciona idioma, por defecto en español
+if lg is None:
+    lg = 'es'
 
 def text_to_speech(text, lg):
     tts = gTTS(text, lang=lg)  # gTTS con idioma
@@ -58,7 +65,7 @@ if st.button("Convertir a Audio"):
         st.warning("Por favor ingresa un texto.")
     else:
         # Generar el archivo de audio
-        result_path, output_text = text_to_speech(text, lg)  
+        result_path, output_text = text_to_speech(text, lg)
         
         # Reproductor de audio
         st.markdown("### Escucha tu audio:")
@@ -88,6 +95,8 @@ def remove_files(n):
                 os.remove(f)
                 print("Deleted ", f)
 
+# Eliminar archivos temporales más antiguos que 7 días
 remove_files(7)
+
 
 
